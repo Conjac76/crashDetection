@@ -61,3 +61,77 @@ void setup(void) {
   unsigned long startMillis;
 
   int i = 0;
+
+  /* (elapsedMillis/1000) */
+  int elapsedSeconds;
+  /* (elapsedSeconds/60) */
+  int elapsedMinutes = 0;
+  /* (elapsedMinutes/60) */
+  int elapsedHours  = 0;
+
+
+void loop() {
+  startMillis = millis();
+
+  /* initialize here so you get new readings for each loop */
+  sensors_event_t a, g, temp;
+  mpu.getEvent(&a, &g, &temp);
+ 
+  if (accellx[0] == NULL) {
+    accellx[0] = (int) a.acceleration.x;
+  }
+  if (accellx[0] != (int)a.acceleration.x) {
+    accellx[1] = (int) a.acceleration.x;
+    digitalWrite(13, HIGH);
+     
+while(i == 0) {
+      lcd.setCursor(0, 0);
+      lcd.print("Time since last incident");
+      currentMillis = millis();
+      elapsedMillis = (currentMillis - startMillis);
+      elapsedMillis = elapsedMillis/1000;
+      elapsedSeconds = (int) elapsedMillis;
+      if(elapsedSeconds < 60){
+        lcd.setCursor(0, 1);
+        lcd.print("S: " + String(elapsedSeconds));
+      }
+      if(elapsedSeconds > 60 and elapsedSeconds < 3600) {
+        lcd.setCursor(0, 1);
+        lcd.print("M: " + String(elapsedSeconds/60) + " S: " + String(elapsedSeconds%60));
+      }
+      if(elapsedSeconds > 3600) {
+        lcd.setCursor(0, 1);
+        lcd.print("H: " + String(elapsedSeconds/3600) + " M: " + String(elapsedSeconds%60) + "S: " + String(elapsedSeconds));
+      }
+    }
+  } if (accelly[0] == NULL) {
+    accelly[0] = (int) a.acceleration.y;
+  }
+  
+if (accelly[0] != (int)a.acceleration.y) {
+    accelly[1] = (int) a.acceleration.y;
+    digitalWrite(13, HIGH);
+    while(i == 0) {
+      lcd.setCursor(0, 0);
+      lcd.print("Time since last incident");
+      currentMillis = millis();
+      elapsedMillis = (currentMillis - startMillis);
+      elapsedMillis = elapsedMillis/1000;
+      elapsedSeconds = (int) elapsedMillis;
+      if(elapsedSeconds < 60){
+        lcd.setCursor(0, 1);
+        lcd.print("S: " + String(elapsedSeconds));
+      }
+      if(elapsedSeconds > 60 and elapsedSeconds < 3600) {
+        lcd.setCursor(0, 1);
+        lcd.print("M: " + String(elapsedSeconds/60) + " S: " + String(elapsedSeconds%60));
+      }
+      if(elapsedSeconds > 3600) {
+        lcd.setCursor(0, 1);
+        lcd.print("H: " + String(elapsedSeconds/3600) + " M: " + String(elapsedSeconds%60) + "S: " + String(elapsedSeconds));
+      }
+    }
+    Serial.print(temp.temperature);
+    Serial.println(" degC");
+    delay(500);
+  }
